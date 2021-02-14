@@ -1,28 +1,16 @@
-DROP DATABASE IF EXISTS company_db;
+--MANGERS--
 
-CREATE DATABASE company_db;
+INSERT INTO manager (name)
+VALUES ("Albert Rodriguez");
 
-USE company_db;
+--DEPARTMENTS--
+INSERT INTO department (name)
+VALUES ("Legal");
 
-CREATE TABLE department (
-    id INTEGER NOT NULL AUTO_INCREMENT,
-    name VARCHAR(30),
-    PRIMARY KEY(id)
-);
+--ROLES--
+INSERT INTO role (title, salary, department_id)
+VALUES ("Lawyer", 100000, 1);
 
-CREATE TABLE role (
-    id INTEGER NOT NULL AUTO_INCREMENT,
-    title VARCHAR(30),
-    salary DECIMAL,
-    department_id INT(10),
-    PRIMARY KEY(id)
-);
-
-CREATE TABLE employee (
-    id INTEGER NOT NULL AUTO_INCREMENT,
-    first_name VARCHAR(30),
-    last_name VARCHAR(30),
-    role_id INT(10),
-    manager_id INT(10),
-    PRIMARY KEY(id)
-);
+--EMPLOYEES--
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Sara", "Allston", 1, 1);
