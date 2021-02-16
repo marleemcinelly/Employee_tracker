@@ -10,18 +10,6 @@ const connection = mysql.createConnection({
     database: 'company_db'
 });
 
-// const departmentTable = cTable.getTable({
-//     {}
-// });
-
-// const afterConnection = () => {
-//     connection.query('SELECT * FROM company_db', (err, res) => {
-//         if (err) throw err;
-//         console.log(res);
-//         connection.end();
-//     });
-// };
-
 connection.connect((err) => {
     if (err) throw err;
     console.log('connected as id ' + connection.threadId);
@@ -32,34 +20,9 @@ const quitFunction = () => {
     connection.end();
 }
 
-function startSearch(){
-    inquirer
-        .prompt([
-            {
-                type: 'list',
-                message: 'What would you like to do?',
-                name: 'choice1',
-                choices: ["View all departments", "View all roles", "View all employees", "Exit"]
-            }
-        ])
-    .then((answer) => {
-        
-        if ((answer) => answer.choice === "View all departments") {
-            console.log("hey if this logged then your if statement is the issue for some reason");
-            departmentDisplay();
-        } else if ((answer) => answer.choice === "View all roles") {
-            roleDisplay();
-        } else if (answer.choice === "View all employees") {
-            employeeDisplay();
-        } else if ((answer) => answer.choice === "Exit") {
-            quitFunction();
-        }
-    })
-};
 
 function departmentDisplay() {
-    console.log("If this prints when you choose role something has gone wrong");
-    const departmentQuery = 'SELECT * FROM department';
+    const departmentQuery = 'SELECT id, name FROM department';
     connection.query(departmentQuery, function(err, res){
         if (err) throw err;
         console.log(res);
@@ -91,7 +54,31 @@ function departmentDisplay() {
 };
 
     const addDepartment = () => {
-        console.log("Addition feature is a work in progress, please check back later");
+        
+            inquirer
+                .prompt([
+                    {type: 'input',
+                    message: 'What is the name of your new department?',
+                    name: 'newDepartmentName'
+                    }
+                ])
+                .then ((answer) => {
+                    const newDepartment = 'INSERT INTO department SET ?';
+                    connection.query(newDepartment,
+                        { 
+                            id: 'INTEGER NOT NULL AUTO_INCREMENT',
+                            name: answer.newDepartmentName
+                        },
+                        function (err, res) {
+                            if (err) throw err;
+                            console.log (res + " department inserted");
+                            connection.end(); 
+                        }
+                        
+                    );
+                connection.end();     
+                })
+               
     };
 
     const deleteDepartment = () => {
@@ -102,7 +89,7 @@ function departmentDisplay() {
         console.log("Update feature is a work in progress, please check back later");
     };
 
-const roleDisplay = () => {
+function roleDisplay () {
     const roleQuery = 'SELECT * FROM role';
     connection.query(roleQuery, function(err, res) {
         if (err) throw err;
@@ -145,7 +132,7 @@ const roleDisplay = () => {
         console.log("Update feature is a work in progress, please check back later");
     };
 
-const employeeDisplay = () => {
+function employeeDisplay () {
     const employeeQuery = 'SELECT * FROM employee';
     connection.query(employeeQuery, function(err, res) {
         if (err) throw err;
@@ -187,4 +174,31 @@ const employeeDisplay = () => {
 
     const updateEmployee = () => {
         console.log("Update feature is a work in progress, please check back later");
+    };
+
+    function startSearch(){
+        inquirer
+            .prompt([
+                {
+                    type: 'list',
+                    message: 'What would you like to do?',
+                    name: 'choice1',
+                    choices: [
+                        "View all departments",
+                        "View all roles",
+                        "View all employees", 
+                        "Exit",]
+                }
+            ])
+        .then((answer) => {
+            if (answer.choice1 === "View all departments") {
+                departmentDisplay(); 
+            } else if (answer.choice1 === "View all roles") {
+                roleDisplay();
+            } else if (answer.choice1 === "View all employees") {
+                employeeDisplay();
+            } else if (answer.choice1 === "Exit") {
+                quitFunction();
+            };
+        });
     };
