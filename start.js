@@ -17,6 +17,7 @@ connection.connect((err) => {
 });
 
 const quitFunction = () => {
+    console.log = "So long for now! Don't forget to close your terminal!";
     connection.end();
 }
 
@@ -36,48 +37,62 @@ function departmentDisplay() {
                 }
             ])
             .then((answer) => {
-
-                if ((answer) => answer.choice == "Add department") {
-                    addDepartment();
-                } else if ((answer) => answer.choice == "Update department") {
+                if (answer.departmentChoice === "Add department") {
+                    addDepartment(); 
+                } else if (answer.departmentChoice === "Update department") {
                     updateDepartment();
-                } else if ((answer) => answer.choice == "Remove department") {
+                } else if (answer.departmentChoice === "Remove department") {
                     deleteDepartment();
-                } else if ((answer) => answer.choice == "Return to start") {
+                } else if (answer.departmentChoice === "Return to start") {
                     startSearch();
-                } else if ((answer) => answer.choice == "Exit") {
+                } else if (answer.departmentChoice === "Exit") {
                     quitFunction();
-                }
+                };
             });
-        connection.end();
+        // connection.end();
     });
 };
 
     const addDepartment = () => {
-        
-            inquirer
-                .prompt([
-                    {type: 'input',
-                    message: 'What is the name of your new department?',
-                    name: 'newDepartmentName'
-                    }
-                ])
-                .then ((answer) => {
-                    const newDepartment = 'INSERT INTO department SET ?';
-                    connection.query(newDepartment,
-                        { 
-                            id: 'INTEGER NOT NULL AUTO_INCREMENT',
-                            name: answer.newDepartmentName
-                        },
-                        function (err, res) {
-                            if (err) throw err;
-                            console.log (res + " department inserted");
-                            connection.end(); 
-                        }
-                        
-                    );
-                connection.end();     
-                })
+        inquirer
+            .prompt([
+                {type: 'input',
+                message: 'What is the name of your new department?',
+                name: 'newDepartmentName'
+                }
+            ])
+            .then ((answer) => {
+                const newDepartment = 'INSERT INTO department SET ?';
+                connection.query(newDepartment,
+                    {
+                        name: answer.newDepartmentName
+                    },
+                    function (err, res) {
+                        if (err) throw err;
+                        console.log (answer.newDepartmentName + " department inserted");
+                        connection.end(); 
+                    });
+                    inquirer
+                        .prompt([
+                            {type: 'list',
+                            message: 'What do you want to do now?',
+                            name: 'whatNow',
+                            choices: ['Do another', 'Return to start', 'Exit']
+                            }
+                        ])
+                        .then ((answer) => {
+                            if (answer.whatNow === 'Do another') {
+                                addDepartment(); 
+                            } else if (answer.whatNow === 'Return to start') {
+                                startSearch();
+                            } else if (answer.whatNow === "Exit") {
+                                quitFunction();
+                            };
+                        });
+                    
+                
+            // connection.end();     
+            })
                
     };
 
@@ -104,24 +119,66 @@ function roleDisplay () {
                 }
             ])
             .then((answer) => {
-
-                if ((answer) => answer.choice == "Add role") {
-                    addRole();
-                } else if ((answer) => answer.choice == "Update role") {
+                if (answer.roleChoice === "Add role") {
+                    addRole(); 
+                } else if (answer.roleChoice === "Update role") {
                     updateRole();
-                } else if ((answer) => answer.choice == "Remove role") {
+                } else if (answer.roleChoice === "Remove role") {
                     deleteRole();
-                } else if ((answer) => answer.choice == "Return to start") {
+                } else if (answer.roleChoice === "Return to start") {
                     startSearch();
-                } else if ((answer) => answer.choice == "Exit") {
+                } else if (answer.roleChoice === "Exit") {
                     quitFunction();
-                }
+                };
             });
     });
 };
 
     const addRole = () => {
-        console.log("Addition feature is a work in progress, please check back later");
+        inquirer
+            .prompt([
+                {type: 'input',
+                message: 'What is the name of your new role?',
+                name: 'newRoleName'
+                },
+                {type: 'number',
+                message: 'What is the yearly salary for the new role? (using numbers, i.e. 1234)',
+                name: 'newRoleSalary'
+                }
+            ])
+            .then ((answer) => {
+                const newRole = 'INSERT INTO role SET ?';
+                connection.query(newRole,
+                    {
+                        title: answer.newRoleName,
+                        salary: answer.newRoleSalary
+                    },
+                    function (err, res) {
+                        if (err) throw err;
+                        console.log (answer.newRoleName + " role inserted");
+                        connection.end(); 
+                    });
+                    inquirer
+                        .prompt([
+                            {type: 'list',
+                            message: 'What do you want to do now?',
+                            name: 'whatNow',
+                            choices: ['Do another', 'Return to start', 'Exit']
+                            }
+                        ])
+                        .then ((answer) => {
+                            if (answer.whatNow === 'Do another') {
+                                addRole(); 
+                            } else if (answer.whatNow === 'Return to start') {
+                                startSearch();
+                            } else if (answer.whatNow === "Exit") {
+                                quitFunction();
+                            };
+                        });
+                    
+                
+            // connection.end();     
+            })
     };
 
     const deleteRole = () => {
@@ -147,25 +204,68 @@ function employeeDisplay () {
                     }
                 ])
                 .then((answer) => {
-                
-                    if ((answer) => answer.choice == "Add employee") {
-                        addEmployee();
-                    } else if ((answer) => answer.choice == "Update employee") {
+                    if (answer.employeeChoice === "Add employee") {
+                        addEmployee(); 
+                    } else if (answer.employeeChoice === "Update employee") {
                         updateEmployee();
-                    } else if ((answer) => answer.choice == "Remove employee") {
+                    } else if (answer.employeeChoice === "Remove employee") {
                         deleteEmployee();
-                    } else if ((answer) => answer.choice == "Return to start") {
+                    } else if (answer.employeeChoice === "Return to start") {
                         startSearch();
-                    } else if ((answer) => answer.choice == "Exit") {
+                    } else if (answer.employeeChoice === "Exit") {
                         quitFunction();
-                    }
+                    };
                 });
-        connection.end();
+        // connection.end();
     });
 };
 
     const addEmployee = () => {
-        console.log("Addition feature is a work in progress, please check back later");
+        inquirer
+            .prompt([
+                {type: 'input',
+                message: 'What is the name of your new employee?',
+                name: 'newEmployeeFirstName'
+                },
+                {
+                    type: 'input',
+                    message: 'What is their last name?',
+                    name: 'newEmployeeLastName'
+                }
+            ])
+            .then ((answer) => {
+                const newEmployee = 'INSERT INTO employee SET ?';
+                connection.query(newEmployee,
+                    {
+                        first_name: answer.newEmployeeFirstName,
+                        last_name: answer.newEmployeeLastName
+                    },
+                    function (err, res) {
+                        if (err) throw err;
+                        console.log (answer.newEmployeeFirstName + " " + answer.newEmployeeLastName + " employee inserted");
+                        connection.end(); 
+                    });
+                    inquirer
+                        .prompt([
+                            {type: 'list',
+                            message: 'What do you want to do now?',
+                            name: 'whatNow',
+                            choices: ['Do another', 'Return to start', 'Exit']
+                            }
+                        ])
+                        .then ((answer) => {
+                            if (answer.whatNow === 'Do another') {
+                                addRole(); 
+                            } else if (answer.whatNow === 'Return to start') {
+                                startSearch();
+                            } else if (answer.whatNow === "Exit") {
+                                quitFunction();
+                            };
+                        });
+                    
+                
+            // connection.end();     
+            })
     };
 
     const deleteEmployee = () => {
